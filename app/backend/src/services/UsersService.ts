@@ -17,7 +17,7 @@ export default class UsersService {
       throw new Errors(401, 'Incorrect email or password');
     }
 
-    const { password: omitted, ...rest } = user.dataValues;
+    const { password: any, ...rest } = user.dataValues;
 
     const token = this.jwt.tokenCreation(rest);
 
