@@ -14,7 +14,7 @@ export default class UsersService {
     const user = await this.userModel.findOne({ where: { email } });
 
     if (!user || !bcrypt.compareSync(password, user.dataValues.password)) {
-      throw new Errors(401, 'Incorrect email or password');
+      throw new Errors(401, 'Invalid email or password');
     }
 
     const { password: any, ...rest } = user.dataValues;

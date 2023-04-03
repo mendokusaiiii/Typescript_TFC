@@ -6,6 +6,8 @@ export const usersSchema = Joi.object({
 }).messages({
   'any.required': 'All fields must be filled',
   'string.empty': 'All fields must be filled',
+  'string.email': 'Invalid email or password',
+  'string.min': 'Invalid email or password',
 });
 
 export const tokenSchema = Joi.object({

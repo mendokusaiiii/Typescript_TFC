@@ -7,8 +7,11 @@ import JWT from '../utils/jwt';
 export function usersValidation(req: Request, _res: Response, next: NextFunction): void {
   const users: IUsers = req.body;
   const { error } = usersSchema.validate(users);
+  console.log(error);
 
-  if (error) throw new Erorrs(400, error.message);
+  if (error?.details[0].type === 'string.empty') throw new Erorrs(400, error.message);
+  if (error?.details[0].type === 'string.email') throw new Erorrs(401, error.message);
+  if (error?.details[0].type === 'string.min') throw new Erorrs(401, error.message);
 
   next();
 }
