@@ -43,14 +43,14 @@ export default class MatchesService {
   }
 
   public async insertNewMatch(match: IMatches): Promise<IMatches> {
-    const { homeTeam, awayTeam } = match;
+    const { homeTeamId, awayTeamId } = match;
 
-    if (homeTeam === awayTeam) {
+    if (homeTeamId === awayTeamId) {
       throw new Errors(422, 'It is not possible to create a match with two equal teams');
     }
 
     const { count } = await this.teamsModel.findAndCountAll({
-      where: { [Op.or]: [{ id: homeTeam }, { id: awayTeam }] },
+      where: { [Op.or]: [{ id: homeTeamId }, { id: awayTeamId }] },
     });
 
     if (count !== 2) throw new Errors(404, 'There is no team with such id!');
