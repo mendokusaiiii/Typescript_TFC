@@ -4,9 +4,9 @@ import Team from './TeamsModel';
 
 class Matches extends Model {
   declare id: number;
-  declare homeTeam: number;
+  declare homeTeamId: number;
   declare homeTeamGoals: number;
-  declare awayTeam: number;
+  declare awayTeamId: number;
   declare awayTeamsGoals: number;
   declare inProgress: boolean;
 }
@@ -18,19 +18,33 @@ Matches.init({
     primaryKey: true,
     type: INTEGER,
   },
-  homeTeam: {
+  homeTeamId: {
     allowNull: false,
     type: INTEGER,
+    references: {
+      model: 'teams',
+      key: 'id',
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
   },
   homeTeamGoals: {
     type: INTEGER,
+    allowNull: false,
   },
-  awayTeam: {
+  awayTeamId: {
     allowNull: false,
     type: INTEGER,
+    references: {
+      model: 'teams',
+      key: 'id',
+    },
+    onUpdate: 'CASCADE',
+    onDelete: 'CASCADE',
   },
   awayTeamGoals: {
     type: INTEGER,
+    allowNull: false,
   },
   inProgress: {
     allowNull: false,
@@ -41,12 +55,10 @@ Matches.init({
   sequelize: db,
   modelName: 'matches',
   timestamps: false,
+  tableName: 'matches',
 });
 
-Matches.belongsTo(Team, { foreignKey: 'homeTeam', as: 'teamHome' });
-Matches.belongsTo(Team, { foreignKey: 'awayTeam', as: 'teamAway' });
-
-Team.hasMany(Matches, { foreignKey: 'homeTeam', as: 'teamHome' });
-Team.hasMany(Matches, { foreignKey: 'awayTeam', as: 'teamAway' });
+Matches.belongsTo(Team, { foreignKey: 'homeTeamId', as: 'homeTeam' });
+Matches.belongsTo(Team, { foreignKey: 'awayTeamId', as: 'awayTeam' });
 
 export default Matches;

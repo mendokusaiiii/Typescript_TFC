@@ -5,17 +5,17 @@ export default class MatchesController {
   constructor(private matchesService = new MatchesService()) {}
 
   public async getMatches(req: Request, res: Response) {
-    const { matches } = req.query;
+    const { inProgress } = req.query;
 
-    if (matches) {
-      const result = await this.matchesService.getActualMatches(matches as string);
+    if (inProgress) {
+      const result = await this.matchesService.getActualMatches(inProgress as string);
 
       return res.status(200).json(result);
     }
 
-    const result = await this.matchesService.getMatches();
+    const resultMatches = await this.matchesService.getMatches();
 
-    return res.status(200).json(result);
+    return res.status(200).json(resultMatches);
   }
 
   public async insertNewMatch(req: Request, res: Response) {

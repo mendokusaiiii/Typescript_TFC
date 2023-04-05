@@ -1,9 +1,9 @@
 import { ModelStatic, Op } from 'sequelize';
 import IMatchesGoals from '../interfaces/IMatchesGoals';
+import IMatches from '../interfaces/IMatches';
 import Errors from '../utils/error';
 import Team from '../database/models/TeamsModel';
 import Matches from '../database/models/MatchesModel';
-import IMatches from '../interfaces/IMatches';
 
 export default class MatchesService {
   constructor(
@@ -14,24 +14,26 @@ export default class MatchesService {
   public async getMatches(): Promise<string[]> {
     const findAllMatches = await this.matchesModel.findAll({
       include: [
-        { model: Team, as: 'teamHome', attributes: ['teamName'] },
-        { model: Team, as: 'teamAway', attributes: ['teamName'] },
+        { model: Team, as: 'homeTeam', attributes: { exclude: ['id'] } },
+        { model: Team, as: 'awayTeam', attributes: { exclude: ['id'] } },
       ],
     });
+
+    console.log('AQUIIIIII', findAllMatches);
 
     const result = findAllMatches.map((item) => item.dataValues);
 
     return result;
   }
 
-  public async getActualMatches(matchesStatus: string): Promise<string[]> {
-    const matchesInProgress = matchesStatus === 'true';
+  public async getActualMatches(inProgressStatus : string): Promise<string[]> {
+    const inProgress = inProgressStatus === 'true';
 
     const findAllMatches = await this.matchesModel.findAll({
-      where: { matchesInProgress },
+      where: { inProgress },
       include: [
-        { model: Team, as: 'teamHome', attributes: ['teamName'] },
-        { model: Team, as: 'teamAway', attributes: ['teamName'] },
+        { model: Team, as: 'homeTeam', attributes: { exclude: ['id'] } },
+        { model: Team, as: 'awayTeam', attributes: { exclude: ['id'] } },
       ],
     });
 
@@ -53,13 +55,13 @@ export default class MatchesService {
 
     if (count !== 2) throw new Errors(404, 'There is no team with such id!');
 
-    const insertedMatch = await this.matchesModel.create({ ...match, matchesInProgress: true });
+    const insertedMatch = await this.matchesModel.create({ ...match, inProgress: true });
     return insertedMatch.dataValues;
   }
 
   public async updateMatchToFinished(id: number): Promise<string> {
     await this.matchesModel.update(
-      { matchesInProgress: false },
+      { inProgress: false },
       { where: { id } },
     );
 
