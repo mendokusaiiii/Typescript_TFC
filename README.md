@@ -1,5 +1,5 @@
 
-# Trybe Futebol Clube(TFC)
+# Futebol Clube(TFC)
 
 Projeto realizado com o objetivo de informar sobre partidas e classificações de futebol!
 
